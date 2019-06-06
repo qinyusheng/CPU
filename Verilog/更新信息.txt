@@ -2,3 +2,5 @@
 1 模块定义开头用()声明接口，不是{}
 2 `Zeroword -> `ZeroWord
 3 `InstInValid -> `InstInvalid
+
+sopc 文件即为openmips_min_sopc
