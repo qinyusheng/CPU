@@ -1,3 +1,24 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2019/06/06 14:27:37
+// Design Name: 
+// Module Name: id
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
 //*** ID模块 ***
 /*
 端口配置：
@@ -78,7 +99,7 @@ always @ (*) begin
 		alusel_o	<= `EXE_RES_NOP;
 		wd_o		<= inst_i[15:11];
 		wreg_o		<= `WriteDisable;
-		instvalid	<= `InstInValid;
+		instvalid	<= `InstInvalid;
 		reg1_read_o	<= 1'b0;
 		reg2_read_o <= 1'b0;
 		reg1_addr_o	<= inst_i[25:21];
@@ -91,7 +112,7 @@ always @ (*) begin
 				// 需要将结果存入寄存器
 				wreg_o		<= `WriteEnable;
 				
-				// 运算的子类型是逻辑“或”运算
+				// 运算的子类型是逻辑"或"运算
 				aluop_o		<= `EXE_OR_OP;
 				
 				// 运算类型是逻辑运算

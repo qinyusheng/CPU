@@ -1,3 +1,25 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2019/06/06 14:27:37
+// Design Name: 
+// Module Name: ex
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
 //执行模块
 //rst 复位信号
 //aluop_i 执行阶段要进行运算的子类型(输入)
@@ -9,7 +31,7 @@
 //wd_o 执行阶段最终要写入的目的寄存器地址(输出)
 //wreg_o 执行阶段是否要写入目的寄存器(输出)
 //wdata_o  执行阶段写入目的寄存器的值(输出)
-module ex{
+module ex(
 	input wire  rst,
 	
 	//译码阶段送到执行模块的信息
@@ -24,7 +46,7 @@ module ex{
 	output reg[`RegAddrBus] wd_o,
 	output reg wreg_o,
 	output reg[`RegBus] wdata_o
-};
+);
 
 //逻辑运算最后的结果
 reg[`RegBus] logicout;
@@ -32,14 +54,14 @@ reg[`RegBus] logicout;
 //依据aluop_i所指示的运算的子类型进行计算
 always @ (*) begin
 	if (rst == `RstEnable) begin
-		logicout <= `Zeroword;
+		logicout <= `ZeroWord;
 	end else begin
 		case(aluop_i)
 		`EXE_OR_OP:begin
 			logicout <= reg1_i | reg2_i;
 		end
 		default: begin
-			logicout <= `Zeroword;
+			logicout <= `ZeroWord;
 		end
 	endcase
 	end//if
@@ -50,16 +72,13 @@ always @ (*) begin
 	wd_o <= wd_i;
 	wreg_o <= wreg_i;
 	case(alusel_i)
-		`EXE_RES_LOGIC:
+		`EXE_RES_LOGIC: begin
 			wdata_o <= logicout;
 		end
 		default: begin
-			wdata_o <= `Zeroword;
+			wdata_o <= `ZeroWord;
 		end
 	endcase
 end//always
 
 endmodule
-
-
-			`

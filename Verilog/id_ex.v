@@ -1,3 +1,25 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2019/06/06 14:27:37
+// Design Name: 
+// Module Name: id_ex
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
 // ID/EX 模块
 /*
 端口设置：
@@ -22,8 +44,8 @@ output：
 */
 
 module id_ex(
-	input wire		clk;
-	input wire		rst;
+	input wire		clk,
+	input wire		rst,
 	
 	// 从译码阶段传递来的消息
 	input wire[`AluOpBus]	id_aluop,
@@ -37,7 +59,7 @@ module id_ex(
 	output reg[`AluOpBus]	ex_aluop,
 	output reg[`AluSelBus]	ex_alusel,
 	output reg[`RegBus]		ex_reg1,
-	output reg[`RegBus]		ex_reg1,
+	output reg[`RegBus]		ex_reg2,
 	output reg[`RegAddrBus]	ex_wd,
 	output reg 				ex_wreg
 );
@@ -52,7 +74,7 @@ always @ (posedge clk) begin
 		ex_wreg		<= `WriteDisable;
 	end else begin
 		ex_aluop    <= id_aluop;
-		ex_alusel	<= id_alusel；
+		ex_alusel	<= id_alusel;
 		ex_reg1		<= id_reg1;
 		ex_reg2		<= id_reg2;
 		ex_wd 		<= id_wd;

@@ -1,3 +1,25 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2019/06/06 15:40:13
+// Design Name: 
+// Module Name: openmips
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
 // 顶层文件 OpenMIPS
 /*
 端口配置：
@@ -106,7 +128,7 @@ module openmips(
 		.reg2_addr_o(reg2_addr),
 		
 		// 送到ID/EX模块的信息
-		.aluop_o(id_aliop_o),
+		.aluop_o(id_aluop_o),
 		.alusel_o(id_alusel_o),
 		.reg1_o(id_reg1_o),
 		.reg2_o(id_reg2_o),
@@ -161,7 +183,7 @@ module openmips(
 		.reg1_i(ex_reg1_i),
 		.reg2_i(ex_reg2_i),
 		.wd_i(ex_wd_i),
-		.wreg_i(ex_wreg_i)
+		.wreg_i(ex_wreg_i),
 	
 		// 输出到EX/MEM模块的信息
 		.wd_o(ex_wd_o),
@@ -170,7 +192,7 @@ module openmips(
 	);
 	
 	// EX/MEM模块例化
-	ex_mem ex_mem(){
+	ex_mem ex_mem(
 		.clk(clk),
 		.rst(rst),
 		
@@ -182,7 +204,7 @@ module openmips(
 		.mem_wd(mem_wd_i),
 		.mem_wreg(mem_wreg_i),
 		.mem_wdata(mem_wdata_i)
-	};
+	);
 	
 	// MEM模块例化
 	mem mem(

@@ -1,3 +1,24 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2019/06/06 14:27:37
+// Design Name: 
+// Module Name: defines
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
 // 定义全局变量,
 `define RstEnable	1'b1 
 `define RstDisable	1'b0
@@ -28,16 +49,16 @@
 `define EXE_RES_NOP		3'b000
 
 // ROM相关的宏定义
-`define InstAddrBus	31:0// 地址总线宽度
+`define InstAddrBus	 31:0// 地址总线宽度
 `define InstBus		31:0//数据总线宽度
 `define InstMemNum	131071
-`define InstMemNUMLog2	17
+`define InstMemNumLog2	17
 
 // 通用寄存器相关
 `define RegAddrBus	4:0
-`define RegBus		31:-
+`define RegBus		31:0
 `define RegWidth	32
-`defome DoubleRegWidth	64
+`define DoubleRegWidth	64
 `define DoubleRegBus	63:0
 `define RegNum		32
 `define RegNumLog2	5

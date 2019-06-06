@@ -1,3 +1,25 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2019/06/06 14:27:37
+// Design Name: 
+// Module Name: regfile
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
 // Regfile模块
 /*
 端口设置：
@@ -28,12 +50,12 @@ module regfile(
 	// 读端口1
 	input wire				re1,
 	input wire[`RegAddrBus]	raddr1,
-	output wire[`RegBus]	rdata1,
+	output reg[`RegBus]	rdata1,
 	
 	// 读端口2
 	input wire 				re2,
 	input wire[`RegAddrBus]	raddr2,
-	output wire[`RegBus]	rdata2
+	output reg[`RegBus]	rdata2
 );
 
 // 定义32个32位的寄存器，用来模拟存储器
@@ -58,9 +80,9 @@ reg[`RegBus] regs[0: `RegNum-1];
 			rdata1 <= `ZeroWord;
 		end else if((raddr1 == waddr) 
 					&& (we == `WriteEnable)
-					&& (rel == `ReadEnable)) begin
+					&& (re1 == `ReadEnable)) begin
 			rdata1 <= wdata;
-		end else if(rel == `ReadEnable) begin
+		end else if(re1 == `ReadEnable) begin
 			rdata1 <= regs[raddr1];
 		end else begin
 			rdata1 <= `ZeroWord;
@@ -78,7 +100,7 @@ reg[`RegBus] regs[0: `RegNum-1];
 					&& (we == `WriteEnable)
 					&& (re2 == `ReadEnable)) begin
 			rdata2 <= wdata;
-		end else if(re == `ReadEnable) begin
+		end else if(re2 == `ReadEnable) begin
 			rdata2 <= regs[raddr2];
 		end else begin
 			rdata2 <= `ZeroWord;
@@ -86,4 +108,5 @@ reg[`RegBus] regs[0: `RegNum-1];
 	end
 
 endmodule
+
 
