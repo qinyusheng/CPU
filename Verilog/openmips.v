@@ -143,7 +143,7 @@ module openmips(
 		.we(wb_wreg_i),
 		.waddr(wb_wd_i),
 		.wdata(wb_wdata_i),
-		.rel(reg1_read),
+		.re1(reg1_read),
 		.raddr1(reg1_addr),
 		.rdata1(reg1_data),
 		.re2(reg2_read),

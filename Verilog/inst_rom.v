@@ -40,7 +40,7 @@ module inst_rom(
 	reg[`InstBus]		inst_mem[0 : `InstMemNum-1];
 	
 	// 从文件inst_rom.data中读取指令
-	initial $readmemh ("inst_rom.data", inst_mem);
+	initial $readmemh ("D:/inst_rom.data", inst_mem);
 	
 	// 当复位信号无效时，依据输入地址，给出对应的元素
 	always @ (*) begin
