@@ -199,6 +199,7 @@ module openmips(
 		// 来自执行阶段EX模块的信息
 		.ex_wd(ex_wd_o),
 		.ex_wreg(ex_wreg_o),
+		.ex_wdata(ex_wdata_o),
 		
 		// 送到访存阶段MEM模块的信息
 		.mem_wd(mem_wd_i),
