@@ -20,22 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-/*MEM/WBæ¨¡å—
-æ¥å£æè¿° 
-æ—¶é’Ÿä¿¡å·ï¼ˆè¾“å…¥ï¼‰	clk
-å¤ä½ä¿¡å·ï¼ˆè¾“å…¥ï¼‰	rst
-è®¿å­˜é˜¶æ®µçš„æŒ‡ä»¤æœ€ç»ˆè¦å†™å…¥çš„ç›®çš„å¯„å­˜å™¨åœ°å€ï¼ˆè¾“å…¥ï¼‰	mem_wd
-è®¿å­˜é˜¶æ®µçš„æŒ‡ä»¤æ˜¯å¦è¦å†™å…¥ç›®çš„å¯„å­˜å™¨ï¼ˆè¾“å…¥ï¼‰	mem_wreg
-è®¿å­˜é˜¶æ®µçš„æŒ‡ä»¤å†™å…¥ç›®çš„å­˜å™¨çš„å€¼ï¼ˆè¾“å…¥ï¼‰	mem_wdata
-æœ€ç»ˆå†™å…¥çš„ç›®çš„å¯„å­˜å™¨çš„åœ°å€ï¼ˆè¾“å‡ºï¼‰	wb_wd
-æœ€ç»ˆæ˜¯å¦è¦å†™å…¥ç›®çš„å¯„å­˜å™¨ï¼ˆè¾“å‡ºï¼‰	wb_wreg
-æœ€ç»ˆå†™å…¥ç›®çš„å¯„å­˜å™¨çš„å€¼ï¼ˆè¾“å‡ºï¼‰	wb_wdata
+/*MEM/WBÄ£¿é
+½Ó¿ÚÃèÊö 
+Ê±ÖÓĞÅºÅ£¨ÊäÈë£©	clk
+¸´Î»ĞÅºÅ£¨ÊäÈë£©	rst
+·Ã´æ½×¶ÎµÄÖ¸Áî×îÖÕÒªĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷µØÖ·£¨ÊäÈë£©	mem_wd
+·Ã´æ½×¶ÎµÄÖ¸ÁîÊÇ·ñÒªĞ´ÈëÄ¿µÄ¼Ä´æÆ÷£¨ÊäÈë£©	mem_wreg
+·Ã´æ½×¶ÎµÄÖ¸ÁîĞ´ÈëÄ¿µÄ´æÆ÷µÄÖµ£¨ÊäÈë£©	mem_wdata
+×îÖÕĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷µÄµØÖ·£¨Êä³ö£©	wb_wd
+×îÖÕÊÇ·ñÒªĞ´ÈëÄ¿µÄ¼Ä´æÆ÷£¨Êä³ö£©	wb_wreg
+×îÖÕĞ´ÈëÄ¿µÄ¼Ä´æÆ÷µÄÖµ£¨Êä³ö£©	wb_wdata
 */
 
 module mem_wb
 (
-	input wire rst,//å¤ä½ä¿¡å·
-	input wire clk,//æ—¶é’Ÿä¿¡å·
+	input wire rst,//¸´Î»ĞÅºÅ
+	input wire clk,//Ê±ÖÓĞÅºÅ
 	
 	input wire[`RegAddrBus] mem_wd,
 	input wire mem_wreg,
@@ -43,7 +43,10 @@ module mem_wb
 	
 	output reg[`RegAddrBus] wb_wd,
 	output reg wb_wreg,
-	output reg[`RegBus] wb_wdata
+	output reg[`RegBus] wb_wdata,
+	
+	// ÏµÍ³¿ØÖÆÖ¸Áî
+	input wire[5:0]			stall
 );
 
 always @(posedge clk) begin
@@ -51,7 +54,11 @@ always @(posedge clk) begin
 		wb_wd <= `NOPRegAddr;
 		wb_wreg <= `WriteDisable;
 		wb_wdata <= `ZeroWord;
-	end else begin
+	end else if(stall[4] == `Stop && stall[5] == `NoStop) begin
+		wb_wd <= `NOPRegAddr;
+		wb_wreg <= `WriteDisable;
+		wb_wdata <= `ZeroWord;
+	end else if(stall[4] == `NoStop) begin
 		wb_wd <= mem_wd;
 		wb_wreg <= mem_wreg;
 		wb_wdata <= mem_wdata;

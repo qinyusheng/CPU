@@ -19,40 +19,72 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-//EX/MEMæ¨¡å—ï¼šå°†ä»æ‰§è¡Œé˜¶æ®µå–å¾—çš„è¿ç®—ç»“æœåœ¨ä¸‹ä¸€ä¸ªæ—¶é’Ÿä¼ é€’åˆ°æµæ°´çº¿çš„è®¿å­˜é˜¶æ®µ
-//æ¥å£ä¿¡æ¯
-//å¤ä½ä¿¡å·ï¼ˆè¾“å…¥ï¼‰	rst
-//æ—¶é’Ÿä¿¡å·ï¼ˆè¾“å…¥ï¼‰	clk
-//æ‰§è¡Œé˜¶æ®µçš„æŒ‡ä»¤æ‰§è¡Œåè¦å†™å…¥çš„å¯„å­˜å™¨çš„åœ°å€ï¼ˆè¾“å…¥ï¼‰	ex_wd
-//æ‰§è¡Œé˜¶æ®µçš„æŒ‡ä»¤æ‰§è¡Œåæ˜¯å¦æœ‰è¦å†™å…¥çš„å¯„å­˜å™¨ï¼ˆè¾“å…¥ï¼‰	ex_wreg 
-//æ‰§è¡Œé˜¶æ®µçš„æŒ‡ä»¤æ‰§è¡Œåè¦å†™å…¥çš„å¯„å­˜å™¨çš„å€¼ï¼ˆè¾“å…¥ï¼‰	ex_wdata
-//è®¿å­˜é˜¶æ®µè¦å†™å…¥çš„å¯„å­˜å™¨çš„åœ°å€ï¼ˆè¾“å‡ºï¼‰	mem_wd
-//è®¿å­˜é˜¶æ®µæ˜¯å¦è¦å†™å…¥ç›®çš„å¯„å­˜å™¨ï¼ˆè¾“å‡ºï¼‰	mem_wreg
-//è®¿å­˜é˜¶æ®µçš„æŒ‡ä»¤è¦å†™å…¥çš„ç›®çš„å¯„å­˜å™¨çš„å€¼ï¼ˆè¾“å‡ºï¼‰ mem_wdata
+//EX/MEMÄ£¿é£º½«´ÓÖ´ĞĞ½×¶ÎÈ¡µÃµÄÔËËã½á¹ûÔÚÏÂÒ»¸öÊ±ÖÓ´«µİµ½Á÷Ë®ÏßµÄ·Ã´æ½×¶Î
+//½Ó¿ÚĞÅÏ¢
+//¸´Î»ĞÅºÅ£¨ÊäÈë£©	rst
+//Ê±ÖÓĞÅºÅ£¨ÊäÈë£©	clk
+//Ö´ĞĞ½×¶ÎµÄÖ¸ÁîÖ´ĞĞºóÒªĞ´ÈëµÄ¼Ä´æÆ÷µÄµØÖ·£¨ÊäÈë£©	ex_wd
+//Ö´ĞĞ½×¶ÎµÄÖ¸ÁîÖ´ĞĞºóÊÇ·ñÓĞÒªĞ´ÈëµÄ¼Ä´æÆ÷£¨ÊäÈë£©	ex_wreg 
+//Ö´ĞĞ½×¶ÎµÄÖ¸ÁîÖ´ĞĞºóÒªĞ´ÈëµÄ¼Ä´æÆ÷µÄÖµ£¨ÊäÈë£©	ex_wdata
+//·Ã´æ½×¶ÎÒªĞ´ÈëµÄ¼Ä´æÆ÷µÄµØÖ·£¨Êä³ö£©	mem_wd
+//·Ã´æ½×¶ÎÊÇ·ñÒªĞ´ÈëÄ¿µÄ¼Ä´æÆ÷£¨Êä³ö£©	mem_wreg
+//·Ã´æ½×¶ÎµÄÖ¸ÁîÒªĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷µÄÖµ£¨Êä³ö£© mem_wdata
 
 module ex_mem(
-	//æ—¶é’Ÿä¿¡å·å’Œå¤ä½ä¿¡å·
+	//Ê±ÖÓĞÅºÅºÍ¸´Î»ĞÅºÅ
 	input wire clk,
 	input wire rst,
-	//æ¥è‡ªäºæ‰§è¡Œé˜¶æ®µçš„ä¿¡æ¯
+	//À´×ÔÓÚÖ´ĞĞ½×¶ÎµÄĞÅÏ¢
 	input wire[`RegAddrBus] ex_wd,
 	input wire ex_wreg,
 	input wire[`RegBus] ex_wdata,
-	//è¦é€è¾¾åˆ°è®¿å­˜é˜¶æ®µçš„ä¿¡æ¯
+	//ÒªËÍ´ïµ½·Ã´æ½×¶ÎµÄĞÅÏ¢
 	output reg[`RegAddrBus] mem_wd,
 	output reg mem_wreg,
-	output reg[`RegBus] mem_wdata
+	output reg[`RegBus] mem_wdata,
+	
+	// ÏµÍ³¿ØÖÆÖ¸Áî
+	input wire[5:0]			stall,
+	
+	// ¼ÓÔØÓëĞ´Èë
+	input wire[`AluOpBus] 	ex_aluop,
+	input wire[`RegBus]		ex_mem_addr,
+	input wire[`RegBus]		ex_reg2,
+	
+	output reg[`AluOpBus]	mem_aluop,
+	output reg[`RegBus]		mem_mem_addr,
+	output reg[`RegBus]		mem_reg2
 );
 
 always @ (posedge clk) begin
 	if(rst==`RstEnable) begin
+		mem_wd 		<= `NOPRegAddr;
+		mem_wreg 	<= `WriteDisable;
+		mem_wdata 	<= `ZeroWord;
+		mem_aluop	<= `EXE_NOP_OP;
+		mem_mem_addr <= `ZeroWord;
+		mem_reg2	<= `ZeroWord;
+	end else if(stall[3] == `Stop && stall[4] == `NoStop) begin
 		mem_wd <= `NOPRegAddr;
 		mem_wreg <= `WriteDisable;
 		mem_wdata <= `ZeroWord;
-	end else begin
+		mem_aluop	<= `EXE_NOP_OP;
+		mem_mem_addr <= `ZeroWord;
+		mem_reg2	<= `ZeroWord;
+	end else if(stall[3] == `NoStop)begin
 		mem_wd <= ex_wd;
 		mem_wreg <= ex_wreg;
 		mem_wdata <= ex_wdata;
+		mem_aluop	<= ex_aluop;
+		mem_mem_addr <= ex_mem_addr;
+		mem_reg2	<= ex_reg2;
+	end else begin
+		mem_wd 		<= `NOPRegAddr;
+		mem_wreg 	<= `WriteDisable;
+		mem_wdata 	<= `ZeroWord;
+		mem_aluop	<= `EXE_NOP_OP;
+		mem_mem_addr <= `ZeroWord;
+		mem_reg2	<= `ZeroWord;
 	end
 end//always
 

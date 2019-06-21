@@ -24,21 +24,21 @@ module openmips_min_sopc_tb();
     reg clk;
     reg rst;
     
-    // ç”Ÿæˆæ—¶é’Ÿä¿¡å·ï¼Œå‘¨æœŸ20ns
+    // Éú³ÉÊ±ÖÓĞÅºÅ£¬ÖÜÆÚ20ns
     initial begin
         clk = 1'b0;
         forever #10 clk = ~clk;
     end
     
-    // 195nsåï¼Œå¤ä½ä¿¡å·æ— æ•ˆ
-    // è¿è¡Œ1000nsåæš‚åœä»¿çœŸ
+    // 195nsºó£¬¸´Î»ĞÅºÅÎŞĞ§
+    // ÔËĞĞ1000nsºóÔİÍ£·ÂÕæ
     initial begin
         rst = `RstEnable;
         #195 rst = `RstDisable;
         #1000 $stop;
     end
     
-    // ä¾‹åŒ–æœ€å°sopc
+    // Àı»¯×îĞ¡sopc
     openmips_min_sopc sopc(
         .clk(clk),
         .rst(rst)

@@ -1,27 +1,75 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2019/06/06 16:02:50
+// Design Name: 
+// Module Name: sopc
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
 module openmips_min_sopc(
 	input wire clk,
 	input wire rst
 );
 
-	// è¿æ¥æŒ‡ä»¤å™¨
+	// Á¬½ÓÖ¸ÁîÆ÷
 	wire[`InstAddrBus]	inst_addr;
 	wire[`InstBus]		inst;
 	wire				rom_ce;
 	
-	// ä¾‹åŒ–å¤„ç†å™¨openmips
+	// Á´½ÓRAM
+	wire[`DataAddrBus]	addr;
+	wire[3:0]			sel;
+	wire[`DataBus]		data;
+	wire				ram_we;
+	wire				ram_ce;
+	
+	wire[`DataBus]		ram_data;
+	
+	// Àı»¯´¦ÀíÆ÷openmips
 	openmips openmips(
 		.clk(clk),
 		.rst(rst),
 		.rom_addr_o(inst_addr),
 		.rom_data_i(inst),
-		.rom_ce_o(rom_ce)
+		.rom_ce_o(rom_ce),
+		
+		.ram_data_i(ram_data),
+		.ram_addr_o(addr),
+		.ram_data_o(data),
+		.ram_sel_o(sel),
+		.ram_we_o(ram_we),
+		.ram_ce_o(ram_ce)
 	);
 	
-	// ä¾‹åŒ–å­˜å‚¨å™¨
+	// Àı»¯´æ´¢Æ÷
 	inst_rom inst_rom(
 		.ce(rom_ce),
 		.addr(inst_addr),
 		.inst(inst)
+	);
+	
+	// Àı»¯RAM
+	data_ram data_ram(
+		.addr(addr),
+		.sel(sel),
+		.data_i(data),
+		.we(ram_we),
+		.ce(ram_ce),
+		
+		.data_o(ram_data)
 	);
 	
 endmodule

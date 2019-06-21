@@ -19,42 +19,114 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-// å®šä¹‰å…¨å±€å˜é‡,
+// ¶¨ÒåÈ«¾Ö±äÁ¿,
 `define RstEnable	1'b1 
 `define RstDisable	1'b0
 `define ZeroWord	32'h00000000
-`define WriteEnable	1'b1
+`define WriteEnable	 1'b1
 `define WriteDisable	1'b0
 `define ReadEnable	1'b1
-`define ReadDisable	1'b0
+`define ReadDisable	 1'b0
 `define AluOpBus	7:0
 `define AluSelBus	2:0
 `define InstValid	1'b0
-`define InstInvalid	1'b1
+`define InstInvalid	 1'b1
 `define True_v		1'b1
 `define False_v		1'b0
-`define ChipEnable	1'b1
-`define ChipDisable	1'b0
+`define ChipEnable 	 1'b1
+`define ChipDisable	  1'b0
 
-// ä¸æŒ‡ä»¤ç›¸å…³çš„å®
+// ÓëÖ¸ÁîÏà¹ØµÄºê
+
 `define EXE_ORI		6'b001101
 `define EXE_NOP		6'b000000
+`define EXE_AND		6'b100100
+`define EXE_OR		6'b100101
+`define	 EXE_XOR		6'b100110
+`define	 EXE_NOR		6'b100111
+`define	 EXE_ANDI	6'b001100
+`define	 EXE_XORI	6'b001110
+`define EXE_LUI		6'b001111
+
+`define EXE_ADD		6'b100000
+`define	 EXE_SUB		6'b100010
+`define EXE_ADDIU	6'b001001
+
+`define EXE_MULT	6'b011000
+`define	 EXE_MULTU	6'b011001
+`define	 EXE_MUL		6'b000010
+
+`define EXE_SLL		6'b000000
+`define EXE_SLLV	6'b000100
+`define EXE_SRL		6'b000010
+`define EXE_SRLV	6'b000110
+`define EXE_SRA		6'b000011
+`define EXE_SRAV 	6'b000111
+
+`define	 EXE_SYNC	6'b001111
+`define EXE_PREF	6'b110011
+`define EXE_SPECIAL_INST	6'b000000 // specialÀàµÄÖ¸ÁîÂë
+
+`define EXE_REGIMM_INST		6'b000001
+`define EXE_SPECIAL2_INST	6'b011100
+
+`define EXE_HALT	6'b111111 // Í£»ú
+`define EXE_SLTI	6'b011100
+
+// ·ÖÖ§Ìø×ªÖ¸Áî
+`define EXE_J		6'b111000
+`define EXE_BEQ		6'b110000
+`define	 EXE_BNE	6'b110001
+`define EXE_BLTZ	6'b110010
+
+`define EXE_J_OP	8'b00111000
+`define	 EXE_BEQ_OP	8'b00110000
+`define EXE_BNE_OP	8'b00110001
+`define EXE_BLTZ_OP 8'b00110010
+
+// ¼ÓÔØÓëĞ´Èë
+`define EXE_SW 		6'b101011
+`define EXE_LW 		6'b100011
+
+`define EXE_SW_OP 	8'b00101011
+`define EXE_LW_OP 	8'b00100011
 
 // Aluop
 `define EXE_OR_OP	8'b00100101
+`define EXE_AND_OP  8'b00100100
+`define EXE_XOR_OP  8'b00100110
+`define EXE_NOR_OP	8'b00100111
+`define EXE_SLL_OP	8'b11000000
+`define EXE_SRL_OP	8'b00000010
+`define EXE_SRA_OP	8'b00000011
 `define EXE_NOP_OP	8'b00000000
+
+`define EXE_ADD_OP	8'b00100000
+`define	 EXE_SUB_OP	8'b00100010
+`define EXE_ADDIU_OP 8'b00001001
+
+// ÏµÍ³¿ØÖÆ
+`define EXE_HALT_OP	 8'b00111111 // Í£»ú
+
+// ±È½Ï
+`define EXE_SLTI_OP	8'b00011100
 
 // AluSel
 `define EXE_RES_LOGIC	3'b001
 `define EXE_RES_NOP		3'b000
+`define EXE_RES_SHIFT	3'b010
+`define EXE_RES_ARITHMETIC	3'b011
+`define EXE_RES_CTRL	3'b100
+`define EXE_RES_JUMP_BRANCH	3'b101
+`define EXE_RES_LOAD_STORE 3'b110
 
-// ROMç›¸å…³çš„å®å®šä¹‰
-`define InstAddrBus	 31:0// åœ°å€æ€»çº¿å®½åº¦
-`define InstBus		31:0//æ•°æ®æ€»çº¿å®½åº¦
+// ROMÏà¹ØµÄºê¶¨Òå
+`define InstAddrBus	 31:0// µØÖ·×ÜÏß¿í¶È
+`define InstBus		31:0//Êı¾İ×ÜÏß¿í¶È
 `define InstMemNum	131071
 `define InstMemNumLog2	17
 
-// é€šç”¨å¯„å­˜å™¨ç›¸å…³
+// Í¨ÓÃ¼Ä´æÆ÷Ïà¹Ø
 `define RegAddrBus	4:0
 `define RegBus		31:0
 `define RegWidth	32
@@ -63,3 +135,21 @@
 `define RegNum		32
 `define RegNumLog2	5
 `define NOPRegAddr	5'b00000
+
+// ÏµÍ³¿ØÖÆÏà¹Ø
+`define Stop		1'b1
+`define NoStop		1'b0
+
+// ·ÖÖ§ÓëÌø×ª¹¦ÄÜÏà¹Ø
+`define Branch		1'b1 // ×ªÒÆ
+`define	 NotBranch	1'b0 // ²»×ªÒÆ
+
+`define InDelaySlot		1'b1 // ÔÚÑÓ³Ù²ÛÖĞ
+`define NotInDelaySlot	1'b0 // ²»ÔÚÑÓ³Ù²ÛÖĞ
+
+// ¼ÓÔØÓëĞ´Èë¹¦ÄÜ
+`define DataAddrBus		31:0
+`define DataBus			31:0
+`define DataMemNum		128
+`define DataMemNumLog2	17
+`define ByteWidth		7:0

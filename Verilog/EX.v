@@ -20,21 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-//æ‰§è¡Œæ¨¡å—
-//rst å¤ä½ä¿¡å·
-//aluop_i æ‰§è¡Œé˜¶æ®µè¦è¿›è¡Œè¿ç®—çš„å­ç±»å‹(è¾“å…¥)
-//alusel_i æ‰§è¡Œé˜¶æ®µè¦è¿›è¡Œè¿ç®—ç±»å‹(è¾“å…¥)
-//reg1_i å‚ä¸è¿ç®—çš„æºæ“ä½œæ•°1(è¾“å…¥)
-//reg2_i å‚ä¸è¿ç®—çš„æºæ“ä½œæ•°2(è¾“å…¥)
-//wd_i æŒ‡ä»¤æ‰§è¡Œè¦å†™å…¥çš„ç›®çš„å¯„å­˜å™¨åœ°å€(è¾“å…¥)
-//wreg_i æ˜¯å¦æœ‰è¦å†™å…¥çš„ç›®çš„å¯„å­˜å™¨(è¾“å…¥)
-//wd_o æ‰§è¡Œé˜¶æ®µæœ€ç»ˆè¦å†™å…¥çš„ç›®çš„å¯„å­˜å™¨åœ°å€(è¾“å‡º)
-//wreg_o æ‰§è¡Œé˜¶æ®µæ˜¯å¦è¦å†™å…¥ç›®çš„å¯„å­˜å™¨(è¾“å‡º)
-//wdata_o  æ‰§è¡Œé˜¶æ®µå†™å…¥ç›®çš„å¯„å­˜å™¨çš„å€¼(è¾“å‡º)
+//Ö´ĞĞÄ£¿é
+//rst ¸´Î»ĞÅºÅ
+//aluop_i Ö´ĞĞ½×¶ÎÒª½øĞĞÔËËãµÄ×ÓÀàĞÍ(ÊäÈë)
+//alusel_i Ö´ĞĞ½×¶ÎÒª½øĞĞÔËËãÀàĞÍ(ÊäÈë)
+//reg1_i ²ÎÓëÔËËãµÄÔ´²Ù×÷Êı1(ÊäÈë)
+//reg2_i ²ÎÓëÔËËãµÄÔ´²Ù×÷Êı2(ÊäÈë)
+//wd_i Ö¸ÁîÖ´ĞĞÒªĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷µØÖ·(ÊäÈë)
+//wreg_i ÊÇ·ñÓĞÒªĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷(ÊäÈë)
+//wd_o Ö´ĞĞ½×¶Î×îÖÕÒªĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷µØÖ·(Êä³ö)
+//wreg_o Ö´ĞĞ½×¶ÎÊÇ·ñÒªĞ´ÈëÄ¿µÄ¼Ä´æÆ÷(Êä³ö)
+//wdata_o  Ö´ĞĞ½×¶ÎĞ´ÈëÄ¿µÄ¼Ä´æÆ÷µÄÖµ(Êä³ö)
+
 module ex(
 	input wire  rst,
 	
-	//è¯‘ç é˜¶æ®µé€åˆ°æ‰§è¡Œæ¨¡å—çš„ä¿¡æ¯
+	//ÒëÂë½×¶ÎËÍµ½Ö´ĞĞÄ£¿éµÄĞÅÏ¢
 	input wire[`AluOpBus] aluop_i,
 	input wire[`AluSelBus] alusel_i,
 	input wire[`RegBus] reg1_i,
@@ -42,16 +43,45 @@ module ex(
 	input wire[`RegAddrBus] wd_i,
 	input wire wreg_i,
 	
-	//æ‰§è¡Œæ¨¡å—æ‰§è¡Œå¾—å‡ºçš„ç»“æœ
+	//Ö´ĞĞÄ£¿éÖ´ĞĞµÃ³öµÄ½á¹û
 	output reg[`RegAddrBus] wd_o,
 	output reg wreg_o,
-	output reg[`RegBus] wdata_o
+	output reg[`RegBus] wdata_o,
+	
+	// ÏµÍ³¿ØÖÆ¹¦ÄÜ
+	output reg			stallreq,
+	
+	// ·ÖÖ§ÓëÌø×ª¹¦ÄÜ
+	input wire[`RegBus]	link_address_i, // Ö´ĞĞ½×¶Î×ªÒÆÖ¸ÁîÒª±£´æµÄ·µ»ØµØÖ·
+	input wire			is_in_delayslot_i, // µ±Ç°Ö´ĞĞ½×¶ÎµÄÖ¸ÁîÊÇ·ñÎ»ÓÚÑÓ³Ù²Û
+	
+	// ¼ÓÔØÓëĞ´Èë
+	input wire[`RegBus] inst_i,
+	
+	output wire[`AluOpBus]	aluop_o,
+	output wire[`RegBus]	mem_addr_o,
+	output wire[`RegBus] 	reg2_o
 );
 
-//é€»è¾‘è¿ç®—æœ€åçš„ç»“æœ
-reg[`RegBus] logicout;
+//Âß¼­ÔËËã×îºóµÄ½á¹û
+reg[`RegBus]	logicout; // Âß¼­ÔËËã½á¹û
+reg[`RegBus]	shiftres; // ÒÆÎ»ÔËËã½á¹û
+reg[`RegBus]	arithmeticres; // ±£´æËãÊıÔËËã½á¹û
+wire[`RegBus]	reg2_i_mux;
+wire[`RegBus]	result_sum;
+wire			reg1_eq_reg2; // Á½¸ö²Ù×÷ÊıÊÇ·ñÏàµÈ
 
-//ä¾æ®aluop_iæ‰€æŒ‡ç¤ºçš„è¿ç®—çš„å­ç±»å‹è¿›è¡Œè®¡ç®—
+// Èç¹ûÊÇ¼õ·¨ÔËËãÈ¡²¹Âë
+assign reg2_i_mux = (aluop_i == `EXE_SUB_OP || aluop_i == `EXE_SLTI_OP)? (~reg2_i)+1 : reg2_i;
+// Çó³ö¼Ó·¨/¼õ·¨ÔËËã½á¹û
+assign result_sum = reg1_i + reg2_i_mux;
+
+// ¼ÓÔØÓëĞ´Èë
+assign aluop_o 		= aluop_i;
+assign mem_addr_o 	= reg1_i + {{16{inst_i[15]}}, inst_i[15:0]}; // ¼ÆËã´æ´¢µØÖ·
+assign reg2_o		= reg2_i;
+
+//ÒÀ¾İaluop_iËùÖ¸Ê¾µÄÔËËãµÄ×ÓÀàĞÍ½øĞĞÂß¼­ÔËËã
 always @ (*) begin
 	if (rst == `RstEnable) begin
 		logicout <= `ZeroWord;
@@ -60,6 +90,18 @@ always @ (*) begin
 		`EXE_OR_OP:begin
 			logicout <= reg1_i | reg2_i;
 		end
+		`EXE_AND_OP:begin
+			logicout <= reg1_i & reg2_i;
+		end
+		`EXE_NOR_OP:begin
+			logicout <= ~(reg1_i | reg2_i);
+		end
+		`EXE_XOR_OP:begin
+			logicout <= reg1_i ^ reg2_i;
+		end
+		`EXE_SLTI_OP:begin
+			logicout <= {31'h0,result_sum[31]};
+		end
 		default: begin
 			logicout <= `ZeroWord;
 		end
@@ -67,7 +109,49 @@ always @ (*) begin
 	end//if
 end//always
 
-//ä¾æ®alusel_iæ‰€æŒ‡ç¤ºçš„è¿ç®—çš„ç±»å‹ï¼Œé€‰æ‹©ä¸€ä¸ªè¿ç®—ç»“æœä½œä¸ºæœ€ç»ˆçš„ç»“æœ
+// ½øĞĞÒÆÎ»ÔËËã
+always @ (*) begin
+	if (rst == `RstEnable) begin
+		shiftres <= `ZeroWord;
+	end else begin
+		case(aluop_i)
+		`EXE_SLL_OP:begin
+			shiftres <= reg2_i << reg1_i[4:0];
+		end
+		`EXE_SRL_OP:begin
+			shiftres <= reg2_i >> reg1_i[4:0];
+		end
+		`EXE_SRA_OP:begin
+			shiftres <= ({32{reg2_i[31]}} << (6'd32-{1'b0 , reg1_i[4:0]}))
+			             | reg2_i >> reg1_i[4:0];
+		end
+		default: begin
+			shiftres <= `ZeroWord;
+		end
+	endcase
+	end //if
+end //always
+
+// ½øĞĞËãÊõÔËËã
+always @ (*) begin
+	if(rst == `RstEnable) begin
+		arithmeticres <= `ZeroWord;
+	end else begin
+		case (aluop_i)
+			`EXE_ADD_OP, `EXE_ADDIU_OP: begin
+				arithmeticres <= result_sum;
+			end
+			`EXE_SUB_OP: begin
+				arithmeticres <= result_sum;
+			end
+			default: begin
+				arithmeticres <= `ZeroWord;
+			end
+		endcase
+	end
+end
+
+//ÒÀ¾İalusel_iËùÖ¸Ê¾µÄÔËËãµÄÀàĞÍ£¬Ñ¡ÔñÒ»¸öÔËËã½á¹û×÷Îª×îÖÕµÄ½á¹û
 always @ (*) begin
 	wd_o <= wd_i;
 	wreg_o <= wreg_i;
@@ -75,10 +159,35 @@ always @ (*) begin
 		`EXE_RES_LOGIC: begin
 			wdata_o <= logicout;
 		end
+		`EXE_RES_SHIFT: begin
+			wdata_o <= shiftres;
+		end
+		`EXE_RES_ARITHMETIC: begin
+			wdata_o <= arithmeticres;
+		end
+		`EXE_RES_JUMP_BRANCH: begin
+			wdata_o <= link_address_i;
+		end
 		default: begin
 			wdata_o <= `ZeroWord;
 		end
 	endcase
 end//always
+
+// Ö´ĞĞÏµÍ³¿ØÖÆ¹¦ÄÜ
+always @ (*) begin
+	if(alusel_i == `EXE_RES_CTRL) begin
+		case(aluop_i) 
+			`EXE_HALT_OP: begin
+				stallreq <= `Stop;
+			end
+			default: begin
+				stallreq <= `NoStop;
+			end
+		endcase 
+	end else begin
+		stallreq <= `NoStop;
+	end
+end
 
 endmodule

@@ -20,48 +20,48 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-// Regfileæ¨¡å—
+// RegfileÄ£¿é
 /*
-ç«¯å£è®¾ç½®ï¼š
-inputï¼š
-	rst		å¤ä½ä¿¡å·
-	clk		æ—¶é’Ÿä¿¡å·
-	waddr	å†™æ“ä½œçš„å¯„å­˜å™¨åœ°å€
-	wdata	è¦å†™å…¥çš„æ•°æ®
-	we		å†™æ“ä½œçš„ä½¿èƒ½ä¿¡å·
-	raddr1	è¯»æ“ä½œçš„ç¬¬ä¸€ä¸ªå¯„å­˜å™¨çš„åœ°å€
-	re1		ç¬¬ä¸€ä¸ªè¯»æ“ä½œçš„ä½¿èƒ½ä¿¡å·
-	raddr2	è¯»æ“ä½œçš„ç¬¬äºŒä¸ªå¯„å­˜å™¨çš„åœ°å€
-	re2		ç¬¬äºŒä¸ªè¯»æ“ä½œçš„ä½¿èƒ½ä¿¡å·
-outputï¼š
-	rdata1	è¯»å‡ºçš„ç¬¬ä¸€ä¸ªå€¼
-	rdata2	è¯»å‡ºçš„ç¬¬äºŒä¸ªå€¼
+¶Ë¿ÚÉèÖÃ£º
+input£º
+	rst		¸´Î»ĞÅºÅ
+	clk		Ê±ÖÓĞÅºÅ
+	waddr	Ğ´²Ù×÷µÄ¼Ä´æÆ÷µØÖ·
+	wdata	ÒªĞ´ÈëµÄÊı¾İ
+	we		Ğ´²Ù×÷µÄÊ¹ÄÜĞÅºÅ
+	raddr1	¶Á²Ù×÷µÄµÚÒ»¸ö¼Ä´æÆ÷µÄµØÖ·
+	re1		µÚÒ»¸ö¶Á²Ù×÷µÄÊ¹ÄÜĞÅºÅ
+	raddr2	¶Á²Ù×÷µÄµÚ¶ş¸ö¼Ä´æÆ÷µÄµØÖ·
+	re2		µÚ¶ş¸ö¶Á²Ù×÷µÄÊ¹ÄÜĞÅºÅ
+output£º
+	rdata1	¶Á³öµÄµÚÒ»¸öÖµ
+	rdata2	¶Á³öµÄµÚ¶ş¸öÖµ
 */
 
 module regfile(
 	input wire	clk,
 	input wire	rst,
 	
-	// å†™ç«¯å£
+	// Ğ´¶Ë¿Ú
 	input wire				we,
 	input wire[`RegAddrBus]	waddr,
 	input wire[`RegBus]		wdata,
 	
-	// è¯»ç«¯å£1
+	// ¶Á¶Ë¿Ú1
 	input wire				re1,
 	input wire[`RegAddrBus]	raddr1,
 	output reg[`RegBus]	rdata1,
 	
-	// è¯»ç«¯å£2
+	// ¶Á¶Ë¿Ú2
 	input wire 				re2,
 	input wire[`RegAddrBus]	raddr2,
 	output reg[`RegBus]	rdata2
 );
 
-// å®šä¹‰32ä¸ª32ä½çš„å¯„å­˜å™¨ï¼Œç”¨æ¥æ¨¡æ‹Ÿå­˜å‚¨å™¨
+// ¶¨Òå32¸ö32Î»µÄ¼Ä´æÆ÷£¬ÓÃÀ´Ä£Äâ´æ´¢Æ÷
 reg[`RegBus] regs[0: `RegNum-1];
 
-// å®šä¹‰å†™æ“ä½œ
+// ¶¨ÒåĞ´²Ù×÷
 
 	always @ (posedge clk) begin
 		if (rst == `RstDisable) begin
@@ -71,7 +71,7 @@ reg[`RegBus] regs[0: `RegNum-1];
 		end
 	end
 	
-// å®šä¹‰ç¬¬ä¸€ä¸ªè¯»æ“ä½œ
+// ¶¨ÒåµÚÒ»¸ö¶Á²Ù×÷
 
 	always @ (*) begin
 		if (rst == `RstEnable) begin
@@ -89,7 +89,7 @@ reg[`RegBus] regs[0: `RegNum-1];
 		end
 	end
 	
-// å®šä¹‰ç¬¬äºŒä¸ªè¯»æ“ä½œ
+// ¶¨ÒåµÚ¶ş¸ö¶Á²Ù×÷
 	
 	always @ (*) begin
 		if (rst == `RstEnable) begin

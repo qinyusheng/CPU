@@ -22,26 +22,27 @@
 
 // *** IF/ID ***
 /*
-ç«¯å£è®¾ç½®ï¼š
+¶Ë¿ÚÉèÖÃ£º
 input:
-	rst		å¤ä½ä¿¡å·
-	clk		æ—¶é’Ÿä¿¡å·
-	if_pc	å–æŒ‡é˜¶æ®µå¾—åˆ°çš„æŒ‡ä»¤åœ°å€
-	if_inst	å–æŒ‡é˜¶æ®µå¾—åˆ°çš„æŒ‡ä»¤
+	rst		¸´Î»ĞÅºÅ
+	clk		Ê±ÖÓĞÅºÅ
+	if_pc	È¡Ö¸½×¶ÎµÃµ½µÄÖ¸ÁîµØÖ·
+	if_inst	È¡Ö¸½×¶ÎµÃµ½µÄÖ¸Áî
 output:
-	id_pc	è¯‘ç é˜¶æ®µçš„æŒ‡ä»¤å¯¹åº”çš„åœ°å€
-	id_inst	è¯‘ç é˜¶æ®µçš„æŒ‡ä»¤
+	id_pc	ÒëÂë½×¶ÎµÄÖ¸Áî¶ÔÓ¦µÄµØÖ·
+	id_inst	ÒëÂë½×¶ÎµÄÖ¸Áî
 */
 
 module if_id(
 	input wire clk,
 	input wire rst,
+	input wire[5:0] stall,
 	
-	// è·å¾—æ¥è‡ªå–æŒ‡é˜¶æ®µçš„ä¿¡æ¯
+	// »ñµÃÀ´×ÔÈ¡Ö¸½×¶ÎµÄĞÅÏ¢
 	input wire[`InstAddrBus]	if_pc,
 	input wire[`InstBus]		if_inst,
 	
-	// è¯‘ç é˜¶æ®µäº§ç”Ÿçš„ä¿¡å·
+	// ÒëÂë½×¶Î²úÉúµÄĞÅºÅ
 	output reg[`InstAddrBus]	id_pc,
 	output reg[`InstBus]		id_inst
 );
@@ -50,7 +51,10 @@ module if_id(
 		if (rst == `RstEnable) begin
 			id_pc <= `ZeroWord;
 			id_inst <= `ZeroWord;
-		end else begin
+		end else if(stall[1] == `Stop && stall[2] == `NoStop) begin
+			id_pc <= `ZeroWord;
+			id_inst <= `ZeroWord;
+		end else if(stall[1] == `NoStop)begin
 			id_pc <= if_pc;
 			id_inst <= if_inst;
 		end

@@ -104,7 +104,7 @@ always @ (*) begin
 			             | reg2_i >> reg1_i[4:0];
 		end
 		default: begin
-			logicout <= `ZeroWord;
+			shiftres <= `ZeroWord;
 		end
 	endcase
 	end //if

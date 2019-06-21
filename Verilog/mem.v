@@ -20,19 +20,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-/*MEMæ¨¡å—
-æ¥å£æè¿° 
-å¤ä½ä¿¡å·ï¼ˆè¾“å…¥ï¼‰	rst
-è®¿å­˜é˜¶æ®µçš„æŒ‡ä»¤è¦å†™å…¥çš„ç›®çš„å¯„å­˜å™¨ï¼ˆè¾“å…¥ï¼‰	wd_i
-è®¿å­˜é˜¶æ®µçš„æŒ‡ä»¤æ˜¯å¦è¦å†™å…¥ç›®çš„å¯„å­˜å™¨ï¼ˆè¾“å…¥ï¼‰	wreg_i
-è®¿å­˜é˜¶æ®µçš„æŒ‡ä»¤å†™å…¥ç›®çš„å­˜å™¨çš„å€¼ï¼ˆè¾“å…¥ï¼‰	wdata_i
-æœ€ç»ˆå†™å…¥çš„ç›®çš„å¯„å­˜å™¨çš„åœ°å€ï¼ˆè¾“å‡ºï¼‰	wd_o
-æœ€ç»ˆæ˜¯å¦è¦å†™å…¥ç›®çš„å¯„å­˜å™¨ï¼ˆè¾“å‡ºï¼‰	wreg_o
-æœ€ç»ˆå†™å…¥ç›®çš„å¯„å­˜å™¨çš„å€¼ï¼ˆè¾“å‡ºï¼‰	wdata_o
+/*MEMÄ£¿é
+½Ó¿ÚÃèÊö 
+¸´Î»ĞÅºÅ£¨ÊäÈë£©	rst
+·Ã´æ½×¶ÎµÄÖ¸ÁîÒªĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷£¨ÊäÈë£©	wd_i
+·Ã´æ½×¶ÎµÄÖ¸ÁîÊÇ·ñÒªĞ´ÈëÄ¿µÄ¼Ä´æÆ÷£¨ÊäÈë£©	wreg_i
+·Ã´æ½×¶ÎµÄÖ¸ÁîĞ´ÈëÄ¿µÄ´æÆ÷µÄÖµ£¨ÊäÈë£©	wdata_i
+×îÖÕĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷µÄµØÖ·£¨Êä³ö£©	wd_o
+×îÖÕÊÇ·ñÒªĞ´ÈëÄ¿µÄ¼Ä´æÆ÷£¨Êä³ö£©	wreg_o
+×îÖÕĞ´ÈëÄ¿µÄ¼Ä´æÆ÷µÄÖµ£¨Êä³ö£©	wdata_o
 */
 
 module mem(
-	input wire rst,//å¤ä½ä¿¡å·
+	input wire rst,//¸´Î»ĞÅºÅ
 	
 	input wire[`RegAddrBus] wd_i,
 	input wire wreg_i,
@@ -40,18 +40,66 @@ module mem(
 	
 	output reg[`RegAddrBus] wd_o,
 	output reg wreg_o,
-	output reg[`RegBus] wdata_o
+	output reg[`RegBus] wdata_o,
+	
+	// ¼ÓÔØÓëĞ´Èë¹¦ÄÜ
+	input wire[`AluOpBus]	aluop_i,
+	input wire[`RegBus]		mem_addr_i,
+	input wire[`RegBus]		reg2_i,
+	
+	input wire[`RegBus]		mem_data_i, // ½ÓÊÜ´æ´¢Æ÷RAMµÄĞÅÏ¢
+	
+	// ´«Êäµ½Íâ²¿´æ´¢Æ÷RAMµÄĞÅÏ¢
+	output reg[`RegBus]		mem_addr_o,
+	output wire				mem_we_o,
+	output reg[3:0]			mem_sel_o,
+	output reg[`RegBus]		mem_data_o,
+	output reg				mem_ce_o
 );
+
+wire[`RegBus]	zero32;
+reg				mem_we;
+
+assign mem_we_o = mem_we; // Íâ²¿´æ´¢Æ÷¶ÁĞ´ĞÅºÅ
+assign zero32  	= `ZeroWord;
 
 always @(*) begin
 	if(rst==`RstEnable) begin
-		wd_o <= `NOPRegAddr;
-		wreg_o <= `WriteDisable;
-		wdata_o <= `ZeroWord;
+		wd_o 		<= `NOPRegAddr;
+		wreg_o 		<= `WriteDisable;
+		wdata_o	 	<= `ZeroWord;
+		mem_addr_o 	<= `ZeroWord;
+		mem_we		<= `WriteDisable;
+		mem_sel_o   <= 4'b0000;
+		mem_data_o 	<= `ZeroWord;
+		mem_ce_o	<= `ChipDisable;
 	end else begin
-		wd_o <= wd_i;
-		wreg_o <= wreg_i;
-		wdata_o <=wdata_i;
+		wd_o 		<= wd_i;
+		wreg_o		<= wreg_i;
+		wdata_o 	<= wdata_i;
+		mem_we		<= `WriteDisable;
+		mem_addr_o	<= `ZeroWord;
+		mem_sel_o	<= 4'b1111;
+		mem_ce_o	<= `ChipDisable;
+		case (aluop_i)
+			`EXE_LW_OP: begin
+				mem_addr_o	<= mem_addr_i;
+				mem_we		<= `WriteDisable;
+				wdata_o		<= mem_data_i;
+				mem_sel_o	<= 4'b1111;
+				mem_ce_o	<= `ChipEnable;
+			end
+			`EXE_SW_OP: begin
+				mem_addr_o  <= mem_addr_i;
+				mem_we		<= `WriteEnable;
+				mem_data_o	<= reg2_i;
+				mem_sel_o	<= 4'b1111;
+				mem_ce_o	<= `ChipEnable;
+			end
+
+			default: begin
+			end
+		endcase
 	end//if
 end//always
 

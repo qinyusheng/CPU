@@ -20,34 +20,34 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-// ID/EX æ¨¡å—
+// ID/EX Ä£¿é
 /*
-ç«¯å£è®¾ç½®ï¼š
-inputï¼š
-	rst 		å¤ä½ä¿¡å·
-	clk			æ—¶é’Ÿä¿¡å·
+¶Ë¿ÚÉèÖÃ£º
+input£º
+	rst 		¸´Î»ĞÅºÅ
+	clk			Ê±ÖÓĞÅºÅ
 	
-	id_alusel	è¯‘ç é˜¶æ®µæŒ‡ä»¤çš„è¿ç®—ç±»å‹
-	id_aluop	è¯‘ç é˜¶æ®µæŒ‡ä»¤çš„è¿ç®—å­ç±»å‹
-	id_reg1		è¯‘ç é˜¶æ®µè¿›è¡Œè¿ç®—çš„æºæ“ä½œæ•°1
-	id_reg2		è¯‘ç é˜¶æ®µè¿›è¡Œè¿ç®—çš„æºæ“ä½œæ•°2
-	id_wd		è¯‘ç é˜¶æ®µè¦å†™å…¥çš„å¯„å­˜å™¨åœ°å€
-	id_wreg		è¯‘ç é˜¶æ®µæ˜¯å¦éœ€è¦å°†ç»“æœå†™å…¥å¯„å­˜å™¨
+	id_alusel	ÒëÂë½×¶ÎÖ¸ÁîµÄÔËËãÀàĞÍ
+	id_aluop	ÒëÂë½×¶ÎÖ¸ÁîµÄÔËËã×ÓÀàĞÍ
+	id_reg1		ÒëÂë½×¶Î½øĞĞÔËËãµÄÔ´²Ù×÷Êı1
+	id_reg2		ÒëÂë½×¶Î½øĞĞÔËËãµÄÔ´²Ù×÷Êı2
+	id_wd		ÒëÂë½×¶ÎÒªĞ´ÈëµÄ¼Ä´æÆ÷µØÖ·
+	id_wreg		ÒëÂë½×¶ÎÊÇ·ñĞèÒª½«½á¹ûĞ´Èë¼Ä´æÆ÷
 
-outputï¼š
-	ex_alusel	æ‰§è¡Œé˜¶æ®µæŒ‡ä»¤çš„è¿ç®—ç±»å‹
-	ex_aluop	æ‰§è¡Œé˜¶æ®µæŒ‡ä»¤çš„è¿ç®—å­ç±»å‹
-	ex_reg1		æ‰§è¡Œé˜¶æ®µæŒ‡ä»¤çš„è¿ç®—çš„æ“ä½œæ•°1
-	ex_reg2		æ‰§è¡Œé˜¶æ®µæŒ‡ä»¤çš„è¿ç®—çš„æ“ä½œæ•°2
-	ex_wd		æ‰§è¡Œé˜¶æ®µçš„æŒ‡ä»¤è¦å†™å…¥çš„ç›®çš„å¯„å­˜å™¨åœ°å€
-	ex_wreg		æ‰§è¡Œé˜¶æ®µçš„æŒ‡ä»¤æ˜¯å¦éœ€è¦å°†ç»“æœå†™å…¥å¯„å­˜å™¨
+output£º
+	ex_alusel	Ö´ĞĞ½×¶ÎÖ¸ÁîµÄÔËËãÀàĞÍ
+	ex_aluop	Ö´ĞĞ½×¶ÎÖ¸ÁîµÄÔËËã×ÓÀàĞÍ
+	ex_reg1		Ö´ĞĞ½×¶ÎÖ¸ÁîµÄÔËËãµÄ²Ù×÷Êı1
+	ex_reg2		Ö´ĞĞ½×¶ÎÖ¸ÁîµÄÔËËãµÄ²Ù×÷Êı2
+	ex_wd		Ö´ĞĞ½×¶ÎµÄÖ¸ÁîÒªĞ´ÈëµÄÄ¿µÄ¼Ä´æÆ÷µØÖ·
+	ex_wreg		Ö´ĞĞ½×¶ÎµÄÖ¸ÁîÊÇ·ñĞèÒª½«½á¹ûĞ´Èë¼Ä´æÆ÷
 */
 
 module id_ex(
 	input wire		clk,
 	input wire		rst,
 	
-	// ä»è¯‘ç é˜¶æ®µä¼ é€’æ¥çš„æ¶ˆæ¯
+	// ´ÓÒëÂë½×¶Î´«µİÀ´µÄÏûÏ¢
 	input wire[`AluOpBus]	id_aluop,
 	input wire[`AluSelBus]	id_alusel,
 	input wire[`RegBus]		id_reg1,
@@ -55,13 +55,29 @@ module id_ex(
 	input wire[`RegAddrBus]	id_wd,
 	input wire				id_wreg,
 	
-	// ä¼ é€’åˆ°æ‰§è¡Œé˜¶æ®µçš„ä¿¡æ¯
+	// ´«µİµ½Ö´ĞĞ½×¶ÎµÄĞÅÏ¢
 	output reg[`AluOpBus]	ex_aluop,
 	output reg[`AluSelBus]	ex_alusel,
 	output reg[`RegBus]		ex_reg1,
 	output reg[`RegBus]		ex_reg2,
 	output reg[`RegAddrBus]	ex_wd,
-	output reg 				ex_wreg
+	output reg 				ex_wreg,
+	
+	// ÏµÍ³¿ØÖÆÖ¸Áî
+	input wire[5:0]			stall,
+	
+	// ·ÖÖ§Ìø×ªÖ¸Áî
+	input wire[`RegBus]		id_link_address,
+	input wire 				id_is_in_delayslot,
+	input wire 				next_inst_in_delayslot_i,
+	
+	output reg[`RegBus]		ex_link_address,
+	output reg				ex_is_in_delayslot,
+	output reg				is_in_delayslot_o,
+	
+	// ¼ÓÔØÓëĞ´Èë
+	input wire[`RegBus]		id_inst,
+	output reg[`RegBus] 	ex_inst
 );
 
 always @ (posedge clk) begin
@@ -72,13 +88,24 @@ always @ (posedge clk) begin
 		ex_reg2		<= `ZeroWord;
 		ex_wd 		<= `NOPRegAddr;
 		ex_wreg		<= `WriteDisable;
-	end else begin
+	end else if(stall[2] == `Stop && stall[3] == `NoStop) begin
+		ex_aluop 	<= `EXE_NOP_OP;
+		ex_alusel	<= `EXE_RES_NOP;
+		ex_reg1		<= `ZeroWord;
+		ex_reg2		<= `ZeroWord;
+		ex_wd 		<= `NOPRegAddr;
+		ex_wreg		<= `WriteDisable;
+	end else if (stall[2] == `NoStop) begin
 		ex_aluop    <= id_aluop;
 		ex_alusel	<= id_alusel;
 		ex_reg1		<= id_reg1;
 		ex_reg2		<= id_reg2;
 		ex_wd 		<= id_wd;
 		ex_wreg		<= id_wreg;
+		ex_link_address	<= id_link_address;
+		ex_is_in_delayslot	<= id_is_in_delayslot;
+		is_in_delayslot_o	<= next_inst_in_delayslot_i;
+		ex_inst 	<= id_inst;
 	end
 end
 
